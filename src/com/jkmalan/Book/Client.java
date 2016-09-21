@@ -2,6 +2,12 @@ package com.jkmalan.Book;
 
 public class Client {
 
+	byte me;
+	String cheese;
+	int eger;
+	double jeopardy;
+	long john_silver;
+	
 	public static void main(String[] args)
 	{
 		

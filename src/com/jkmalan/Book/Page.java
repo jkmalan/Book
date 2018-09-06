@@ -1,6 +1,8 @@
 package com.jkmalan.Book;
 
-public class Page{
+import java.io.Serializable;
+
+public class Page implements Serializable{
 
     private String contents;
 

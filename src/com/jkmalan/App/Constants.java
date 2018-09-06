@@ -17,6 +17,7 @@ public abstract class Constants {
     public static final String PREV_BUTTON_DEFAULT_TEXT = "Last Page";
     public static final String NEXT_BUTTON_DEFAULT_TEXT = "Next Page";
     public static final String TITLE_LABEL_DEFAULT_TEXT = "Book title";
+    public static final String LOAD_FILE_BUTTON_DEFAULT_TEXT = "Load a book";
     public static final double DEFAULT_WINDOW_WIDTH = 700;
     public static final double DEFAULT_WINDOW_HEIGHT = 700;
     

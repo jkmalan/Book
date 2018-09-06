@@ -1,8 +1,9 @@
 package com.jkmalan.Book;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Book extends ArrayList<Page>{
+public class Book extends ArrayList<Page> implements Serializable{
 	
     private String title;
     private int pageNum;
@@ -31,13 +32,13 @@ public class Book extends ArrayList<Page>{
 
     public void flipForwards(){
 
-        pageNum = pageNum >= size()?size():pageNum+1;
+        pageNum = pageNum >= size() ? size() : pageNum+1;
 
     }
 
     public void flipBackwards(){
 
-        pageNum = pageNum <= 0? 0 : pageNum-1;
+        pageNum = pageNum <= 0 ? 0 : pageNum-1;
 
     }
 

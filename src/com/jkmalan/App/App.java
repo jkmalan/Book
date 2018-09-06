@@ -1,6 +1,6 @@
-package com.jkmalan.Book;
+package com.jkmalan.App;
 
-import static com.jkmalan.Book.Constants.*;
+import static com.jkmalan.App.Constants.*;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
@@ -20,18 +20,30 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 
-public class Client extends Application{
+public class App extends Application{
     
     private TextArea pageContents;
     private Label pageNum, sizeLbl, titleLbl;
     private Button prevButton, nextButton;
     private Stage mainStage;
     
+    private DataManager data;
+    private FileManager file;
+    
+    /**
+     * This is what is executed at the start of the program.
+     * 
+     * @param primaryStage
+     * @throws Exception 
+     */
     @Override
     public void start(Stage primaryStage) throws Exception {
     
         //Application starts here
         mainStage = primaryStage;
+        
+        data = new DataManager(this);
+        file = new FileManager(this);
         
         initComponents();
         setupGUI();
@@ -41,7 +53,9 @@ public class Client extends Application{
         
     }
     
-    //Initializes the puzzle pieces for this GUI
+    /**
+     * Initializes the puzzle pieces for this GUI.
+     */
     private void initComponents(){
         
         mainStage.setTitle(APP_TITLE);
@@ -64,7 +78,9 @@ public class Client extends Application{
         
     }
     
-    //Puts the puzzle pieces together
+    /**
+     * Puts the puzzle pieces together.
+     */
     private void setupGUI(){
         
         VBox mainPane = new VBox();
@@ -120,7 +136,12 @@ public class Client extends Application{
         
     }
     
-    //Used for debugging purposes to figure out where sections of the GUI start and end
+    /**
+     * Used for debugging purposes to figure out where sections of the GUI start and end
+     * 
+     * @param color
+     * @return 
+     */
     private Border createBorder(Color color){
         
         return new Border(
@@ -132,9 +153,13 @@ public class Client extends Application{
         
     }
     
-    //Sets up any event handlers or listeners we need
+    /**
+     * Sets up any handlers we need
+     */
     private void setupHandlers(){
         
+        
+        //
         mainStage.widthProperty().addListener((obs, oldval, newval) -> {
         
             updateSizeLabel();
@@ -146,17 +171,12 @@ public class Client extends Application{
             updateSizeLabel();
         
         });
-        
-    }
-    
-    @Override
-    public void stop(){
-        
-        //Code to execute when the exit button here
         
     }
 
-    //Updates the size label. Happens syncronously with any other threads doing work
+    /**
+     * Updates the size label. Happens synchronously with any other threads doing work
+     */
     private void updateSizeLabel(){
         
         Platform.runLater(() -> {
@@ -166,6 +186,9 @@ public class Client extends Application{
         });
         
     }
+    
+    public FileManager getFileManager(){return file;}
+    public DataManager getDataManager(){return data;}
     
     //Not used
     public static void main(String[] args){launch(args);}

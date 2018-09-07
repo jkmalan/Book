@@ -1,11 +1,12 @@
 package com.jkmalan.Book;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Book extends ArrayList<Page>{
+public class Book extends ArrayList<Page> implements Serializable{
 	
     private String title;
-    private int pageNum;
+    private int index;
 
     public Book(String title, int numPages)
     {
@@ -20,31 +21,38 @@ public class Book extends ArrayList<Page>{
         }
         
         this.title = title;
-        pageNum = 0;
+        index = 0;
 
     }
 
     public void setTitle(String in){title = in;}
     public String getTitle(){return title;}
 
-    public Page getCurrentPage(){return get(pageNum);}
-
+    public Page getCurrentPage(){return get(index);}
+    public int getCurrentPageNumber(){return index;}
+    
     public void flipForwards(){
 
-        pageNum = pageNum >= size()?size():pageNum+1;
-
+        if(index >= size()-1)
+            index = size()-1;
+        else
+            index++;
+        
     }
 
     public void flipBackwards(){
 
-        pageNum = pageNum <= 0? 0 : pageNum-1;
-
+        if(index <= 0)
+            index = 0;
+        else
+            index--;
+        
     }
 
     public Page flipToPage(int i){
 
-        pageNum = i;
-        return get(pageNum);
+        index = i;
+        return get(index);
 
     }
 	

@@ -98,10 +98,49 @@ public class Controller {
         
         if(alert.getResult() == ButtonType.YES){
             
-            //Clear out the GUI and set everything to be editable
-            //Pop up an input dialog?
-            //TODO
-            System.out.println("Do stuff");
+            int newPageCount = 0;
+            String title = "";
+            
+            TextInputDialog inputDialog = new TextInputDialog();
+            Optional<String> result;
+            
+            //Read title
+            do{
+            
+                inputDialog.setTitle("Title");
+                inputDialog.setHeaderText("Enter a title for the new book");
+                inputDialog.setContentText("Title:");
+
+                result = inputDialog.showAndWait();
+            
+                if(!result.isPresent())
+                    continue;
+                
+            }while(!titleIsValid(result.get()));
+               
+            title = result.get();
+            
+            //Read page count            
+            do{
+            
+                inputDialog.setTitle("Page Count");
+                inputDialog.setHeaderText("Enter the number of pages for the new book");
+                inputDialog.setContentText("Page Count:");
+                
+                result = inputDialog.showAndWait();
+                
+                if(!result.isPresent())
+                    continue;
+                
+            }while(!pageCountIsValid(result.get()));
+            
+            newPageCount = Integer.valueOf(result.get());
+            
+            mainApp.getDataManager().setData(new Book(title, newPageCount));
+            mainApp.updateGUI();
+            mainApp.disableNavButtons(false);
+            mainApp.disableSaveButton(false);
+            mainApp.disableEditableButton(false);
             
         }else{
             
@@ -109,6 +148,43 @@ public class Controller {
             
         }
         
+    }
+    
+    /**
+     * 
+     * @param title
+     * @return 
+     */
+    private boolean titleIsValid(String title){
+
+        return title != null && !title.isEmpty();
+
+    }
+    
+    /**
+     * 
+     * @param pageCount
+     * @return 
+     */
+    private boolean pageCountIsValid(String pageCount){
+    
+        try{
+            
+            int temp = Integer.valueOf(pageCount);
+            //Check if the number is below 0
+            if(temp <= 0)
+                return false;
+            
+        }catch(NumberFormatException nfe){
+            
+            //Return false since the string isnt a number
+            return false;
+            
+        }
+        
+        //If none of the conditions were tripped, the pagenumber is fine
+        return true;
+    
     }
     
     public void handleEditButtonClicked(){

@@ -37,4 +37,11 @@ public class DataManager {
         
     }
     
+    public void saveDataFromGUI(){
+    
+        book.getCurrentPage().setContents(mainApp.getPageText());
+        book.setTitle(mainApp.getTitleText());
+        
+    }
+    
 }

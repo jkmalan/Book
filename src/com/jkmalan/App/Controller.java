@@ -35,7 +35,7 @@ public class Controller {
     public void handleFileButtonClicked(){
         
         FileChooser fc = new FileChooser();
-        fc.setInitialDirectory(new File("./"));
+        fc.setInitialDirectory(new File("./data/"));
         
         File file = fc.showOpenDialog(mainApp.getMainStage());
         
@@ -63,6 +63,8 @@ public class Controller {
             mainApp.disableSaveButton(false);
             mainApp.updateGUI();
         
+            System.out.println("File " + file.getName() + " successfully loaded");
+            
         }else{
             
             System.out.println("Error! The file could not be opened or read.");
@@ -73,6 +75,7 @@ public class Controller {
     
     public void handleNextButtonClicked(){
         
+        mainApp.getDataManager().saveDataFromGUI();
         mainApp.getDataManager().getData().flipForwards();
         mainApp.updateGUI();
         
@@ -80,6 +83,7 @@ public class Controller {
     
     public void handlePrevButtonClicked(){
         
+        mainApp.getDataManager().saveDataFromGUI();
         mainApp.getDataManager().getData().flipBackwards();
         mainApp.updateGUI();
         
@@ -119,8 +123,6 @@ public class Controller {
         Alert alert = new Alert(AlertType.WARNING, "Warning: Saved changes cannot be undone. Still save?", ButtonType.YES, ButtonType.CANCEL);
         alert.showAndWait();
         
-        Optional<String> result;
-        
         if(alert.getResult() == ButtonType.YES){
             
             TextInputDialog inputDialog = new TextInputDialog("test");
@@ -128,7 +130,7 @@ public class Controller {
             inputDialog.setHeaderText("Enter a name for your .book file (without extension)");
             inputDialog.setContentText("File Name:");
 
-            result = inputDialog.showAndWait();
+            Optional<String> result = inputDialog.showAndWait();
             
             if(!result.isPresent())
                 return;
@@ -136,7 +138,8 @@ public class Controller {
             try{
             
                 mainApp.getFileManager().saveDataToFile(result.get());
-            
+                System.out.println("File saved to ./data/" + result.get());
+                
             }catch(FileNotFoundException fe){
                 
                 System.out.println("The destination file could not be found!");

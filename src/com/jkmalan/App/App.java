@@ -217,6 +217,26 @@ public class App extends Application{
     }
 
     /**
+     * 
+     * @return 
+     */
+    public String getTitleText(){
+        
+       return titleField.getText();
+        
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    public String getPageText(){
+    
+        return pageContents.getText();
+    
+    }
+    
+    /**
      * Updates the size label. Happens synchronously with any other threads doing work
      */
     private void updateSizeLabel(){
@@ -255,6 +275,10 @@ public class App extends Application{
         
     }
     
+    /**
+     * 
+     * @param bool 
+     */
     public void disableNavButtons(boolean bool){
         
         Platform.runLater(() -> {
@@ -266,6 +290,10 @@ public class App extends Application{
         
     }
     
+    /**
+     * 
+     * @param bool 
+     */
     public void disableEditableButton(boolean bool){
         
         Platform.runLater(() -> {
@@ -276,6 +304,10 @@ public class App extends Application{
         
     }
     
+    /**
+     * 
+     * @param bool 
+     */
     public void disableSaveButton(boolean bool){
         
         Platform.runLater(() -> {

@@ -1,10 +1,6 @@
 package com.jkmalan.App;
 
 import static com.jkmalan.App.Constants.*;
-import com.jkmalan.Book.Book;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -13,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
@@ -28,12 +25,16 @@ import javafx.stage.Stage;
 public class App extends Application{
     
     private TextArea pageContents;
-    private Label pageNum, sizeLbl, titleLbl;
-    private Button prevButton, nextButton, loadFileButton;
+    private Label pageNum, sizeLbl;
+    private Button prevButton, nextButton, loadFileButton, newBookButton, editButton, saveButton;
     private Stage mainStage;
+    private TextField titleField;
     
     private DataManager data;
     private FileManager file;
+    
+    //Determines if this application is in editor mode or not
+    private boolean editMode;
     
     /**
      * This is what is executed at the start of the program.
@@ -63,6 +64,8 @@ public class App extends Application{
      */
     private void initComponents(){
         
+        editMode = false;
+        
         mainStage.setTitle(APP_TITLE);
         
         pageContents = new TextArea("");
@@ -75,13 +78,17 @@ public class App extends Application{
         prevButton = new Button(PREV_BUTTON_DEFAULT_TEXT);
         nextButton = new Button(NEXT_BUTTON_DEFAULT_TEXT);
         loadFileButton = new Button(LOAD_FILE_BUTTON_DEFAULT_TEXT);
-        
+        newBookButton = new Button(NEW_BOOK_BUTTON_DEFAULT_TEXT);
+        editButton = new Button(EDIT_BOOK_BUTTON_DISABLED_TEXT);
         
         prevButton.setMinSize(20, 20);
         nextButton.setMinSize(20, 20);
         
         sizeLbl = new Label();
-        titleLbl = new Label(TITLE_LABEL_DEFAULT_TEXT);
+        titleField = new TextField(TITLE_LABEL_DEFAULT_TEXT);
+        titleField.setEditable(false);
+        
+        saveButton = new Button(SAVE_BUTTON_TEXT);
         
     }
     
@@ -92,12 +99,12 @@ public class App extends Application{
         
         VBox mainPane = new VBox();
         mainPane.setPadding(new Insets(5));
-        mainPane.getChildren().addAll(/*sizeLbl, */loadFileButton);
+        mainPane.getChildren().addAll(/*sizeLbl, */loadFileButton, newBookButton, editButton, saveButton);
         //mainPane.setBorder(createBorder(Color.PURPLE));
         
         StackPane topStackPane = new StackPane();
         topStackPane.setAlignment(Pos.CENTER);
-        topStackPane.getChildren().add(titleLbl);
+        topStackPane.getChildren().add(titleField);
         
         System.out.println((double)DEFAULT_WINDOW_HEIGHT * .28);
         
@@ -141,6 +148,9 @@ public class App extends Application{
         mainStage.setScene(new Scene(mainPane));
         
         updateSizeLabel();
+        disableNavButtons(true);
+        disableEditableButton(true);
+        disableSaveButton(true);
         
     }
     
@@ -186,6 +196,24 @@ public class App extends Application{
         
         });
         
+        newBookButton.setOnMouseClicked(e -> {
+        
+            controller.handleNewButtonClicked();
+        
+        });
+        
+        editButton.setOnMouseClicked(e -> {
+        
+            controller.handleEditButtonClicked();
+        
+        });
+        
+        saveButton.setOnMouseClicked(e -> {
+        
+            controller.handleSaveButtonClicked();
+        
+        });
+        
     }
 
     /**
@@ -195,23 +223,94 @@ public class App extends Application{
         
         Platform.runLater(() -> {
             
-                sizeLbl.setText(mainStage.getWidth() + " x " + mainStage.getHeight());
+            sizeLbl.setText(mainStage.getWidth() + " x " + mainStage.getHeight());
             
         });
         
     }
     
+    /**
+     * 
+     * @param edit 
+     */
+    public void setEditable(Boolean edit){
+        
+        //No need to change modes if we're already in the desired mode
+        if(edit == editMode)
+            return;
+            
+        Platform.runLater(() -> {
+        
+            editMode = edit;
+            
+            if(editMode)
+                editButton.setText(EDIT_BOOK_BUTTON_ENABLED_TEXT);
+            else
+                editButton.setText(EDIT_BOOK_BUTTON_DISABLED_TEXT);
+            
+            pageContents.setEditable(edit);
+            titleField.setEditable(edit);
+            
+        });
+        
+    }
+    
+    public void disableNavButtons(boolean bool){
+        
+        Platform.runLater(() -> {
+        
+            prevButton.setDisable(bool);
+            nextButton.setDisable(bool);
+            
+        });
+        
+    }
+    
+    public void disableEditableButton(boolean bool){
+        
+        Platform.runLater(() -> {
+        
+            editButton.setDisable(bool);
+        
+        });
+        
+    }
+    
+    public void disableSaveButton(boolean bool){
+        
+        Platform.runLater(() -> {
+        
+            saveButton.setDisable(bool);
+        
+        });
+        
+    }
+    
+    /**
+     * Determines if the application is in editable mode.
+     * 
+     * @return 
+     */
+    public boolean getEditable(){
+        
+        return editMode;
+        
+    }
+    
+    /**
+     * Refreshes the GUI to reflect application data
+     */
     public void updateGUI(){
         
         Platform.runLater(() -> {
         
             pageContents.clear();
             pageNum.setText("");
-            titleLbl.setText("");
+            titleField.setText("");
             
             pageNum.setText(data.getData().getCurrentPageNumber() + 1 +"");
             pageContents.setText(data.getData().getCurrentPage().getContents());
-            titleLbl.setText(data.getData().getTitle());
+            titleField.setText(data.getData().getTitle());
             
         });
         

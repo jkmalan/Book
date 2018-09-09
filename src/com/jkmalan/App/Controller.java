@@ -9,6 +9,11 @@ import com.jkmalan.Book.Book;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Optional;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.TextInputDialog;
 import javafx.stage.FileChooser;
 
 /**
@@ -53,6 +58,9 @@ public class Controller {
         if(data != null){
         
             mainApp.getDataManager().setData(data);
+            mainApp.disableNavButtons(false);
+            mainApp.disableEditableButton(false);
+            mainApp.disableSaveButton(false);
             mainApp.updateGUI();
         
         }else{
@@ -74,6 +82,72 @@ public class Controller {
         
         mainApp.getDataManager().getData().flipBackwards();
         mainApp.updateGUI();
+        
+    }
+ 
+    public void handleNewButtonClicked(){
+        
+        //TODO
+        
+        Alert alert = new Alert(AlertType.CONFIRMATION, "Create a new book? The currently loaded book will not be saved", ButtonType.YES, ButtonType.NO);
+        alert.showAndWait();
+        
+        if(alert.getResult() == ButtonType.YES){
+            
+            //Clear out the GUI and set everything to be editable
+            //Pop up an input dialog?
+            //TODO
+            System.out.println("Do stuff");
+            
+        }else{
+            
+            System.out.println("No was pressed.");
+            
+        }
+        
+    }
+    
+    public void handleEditButtonClicked(){
+        
+        //Flips the mode of this application
+        mainApp.setEditable(!mainApp.getEditable());
+        
+    }
+    
+    public void handleSaveButtonClicked(){
+    
+        Alert alert = new Alert(AlertType.WARNING, "Warning: Saved changes cannot be undone. Still save?", ButtonType.YES, ButtonType.CANCEL);
+        alert.showAndWait();
+        
+        Optional<String> result;
+        
+        if(alert.getResult() == ButtonType.YES){
+            
+            TextInputDialog inputDialog = new TextInputDialog("test");
+            inputDialog.setTitle("File Name");
+            inputDialog.setHeaderText("Enter a name for your .book file (without extension)");
+            inputDialog.setContentText("File Name:");
+
+            result = inputDialog.showAndWait();
+            
+            if(!result.isPresent())
+                return;
+            
+            try{
+            
+                mainApp.getFileManager().saveDataToFile(result.get());
+            
+            }catch(FileNotFoundException fe){
+                
+                System.out.println("The destination file could not be found!");
+                
+            }catch(IOException ioe){
+                
+                System.out.println("IOException: " + ioe.getMessage());
+                
+            }
+            
+        }
         
     }
     
